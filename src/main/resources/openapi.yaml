@@ -1,0 +1,219 @@
+openapi: 3.0.3
+info:
+  title: API Posters
+  description: API REST pour gérer des posters de films (CRUD MongoDB).
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Serveur local
+
+tags:
+  - name: posters
+    description: Opérations sur les posters
+
+paths:
+  /api/posters:
+    get:
+      tags:
+        - posters
+      summary: Liste tous les posters
+      operationId: getAllPosters
+      responses:
+        '200':
+          description: Liste recuperée avec succes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Poster'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - posters
+      summary: Crée un nouveau poster
+      operationId: createPoster
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Poster'
+            example:
+              id: tt9999999
+              url: https://example.com/poster.jpg
+              titre: Mon Film
+      responses:
+        '201':
+          description: Poster créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Poster'
+        '400':
+          description: Données invalides (champs manquants)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Un poster avec cet id existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/posters/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: Identifiant du poster (ex. tt0050083)
+        required: true
+        schema:
+          type: string
+        example: tt0050083
+
+    get:
+      tags:
+        - posters
+      summary: Récupère un poster par son id
+      operationId: getPosterById
+      responses:
+        '200':
+          description: Poster récupéré avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Poster'
+        '404':
+          description: Poster introuvable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - posters
+      summary: Modifie un poster existant
+      operationId: updatePoster
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PosterPatch'
+            example:
+              url: https://example.com/nouveau.jpg
+              titre: Nouveau Titre
+      responses:
+        '200':
+          description: Poster mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Poster'
+        '404':
+          description: Poster introuvable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - posters
+      summary: Supprime un poster
+      operationId: deletePoster
+      responses:
+        '204':
+          description: Poster supprimé avec succès
+        '404':
+          description: Poster introuvable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Poster:
+      type: object
+      description: Représentation d'un poster de film
+      properties:
+        id:
+          type: string
+          description: Identifiant unique du poster (IMDb id)
+          example: tt0050083
+        url:
+          type: string
+          description: URL de l'image du poster
+          example: https://example.com/poster.jpg
+        titre:
+          type: string
+          description: Titre du film
+          example: 12 Angry Men
+      required:
+        - id
+        - url
+        - titre
+
+    PosterPatch:
+      type: object
+      description: Champs modifiables d'un poster
+      properties:
+        url:
+          type: string
+          description: Nouvelle URL de l'image
+          example: https://example.com/nouveau.jpg
+        titre:
+          type: string
+          description: Nouveau titre
+          example: Nouveau Titre
+
+    ErrorResponse:
+      type: object
+      description: Réponse d'erreur
+      properties:
+        status:
+          type: integer
+          description: Code HTTP de l'erreur
+          example: 404
+        message:
+          type: string
+          description: Message d'erreur
+          example: Poster introuvable
+      required:
+        - status
+        - message
