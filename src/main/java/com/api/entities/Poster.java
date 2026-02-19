@@ -1,22 +1,9 @@
 package com.api.entities;
 
-import jakarta.persistence.*;
-import java.io.Serializable;
+public class Poster {
 
-@Entity
-@Table(name = "poster")
-public class Poster implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @Column(name = "id", nullable = false, unique = true)
     private String id;
-
-    @Column(name = "url", nullable = false)
     private String url;
-
-    @Column(name = "titre", nullable = false)
     private String titre;
 
     public Poster() {}
