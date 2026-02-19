@@ -87,46 +87,66 @@ docker compose down -v
 | PUT | `/api/posters/{id}` | Modifie l'url et/ou le titre d'un poster |
 | DELETE | `/api/posters/{id}` | Supprime un poster |
 
+## Sécurité JWT
+
+Toutes les routes `/api/*` exigent un token JWT via l'en-tête :
+
+```
+Authorization: Bearer <token>
+```
+
+La validation est stateless (signature + expiration). La configuration est dans `src/main/resources/application.properties` :
+
+```
+security.jwt.secret=CHANGE_ME_TO_A_LONG_RANDOM_SECRET_KEY_32CHARS_MIN
+security.jwt.expiration=3h
+```
+
 ### Exemples curl
 
 ```bash
 # Lister les posters
-curl http://localhost:8080/api/posters
+curl http://localhost:8080/api/posters \
+     -H "Authorization: Bearer <token>"
 
 # Récupérer un poster
-curl http://localhost:8080/api/posters/tt0111161
+curl http://localhost:8080/api/posters/tt0111161 \
+     -H "Authorization: Bearer <token>"
 
 # Créer un poster
 curl -X POST http://localhost:8080/api/posters \
+     -H "Authorization: Bearer <token>" \
      -H "Content-Type: application/json" \
      -d '{"id": "tt0111161", "url": "https://example.com/shawshank.jpg", "titre": "The Shawshank Redemption"}'
 
 # Modifier un poster (un seul champ suffit)
 curl -X PUT http://localhost:8080/api/posters/tt0111161 \
+     -H "Authorization: Bearer <token>" \
      -H "Content-Type: application/json" \
      -d '{"titre": "The Shawshank Redemption (1994)"}'
 
 # Supprimer un poster
-curl -X DELETE http://localhost:8080/api/posters/tt0111161
+curl -X DELETE http://localhost:8080/api/posters/tt0111161 \
+     -H "Authorization: Bearer <token>"
 ```
 
 ### Exemples de requêtes (Powershell)
 
 ```ps
 # Lister les posters
-Invoke-WebRequest -Uri "http://localhost:8080/api/posters/" -Method GET -UseBasicParsing
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/" -Method GET -Headers @{ Authorization = "Bearer <token>" } -UseBasicParsing
 
 # Récupérer un poster
-Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method GET -UseBasicParsing
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method GET -Headers @{ Authorization = "Bearer <token>" } -UseBasicParsing
 
 # Créer un poster
-Invoke-WebRequest -Uri "http://localhost:8080/api/posters" -Method POST -ContentType "application/json" -Body '{"id":"tt0111161","url":"https://example.com/shawshank.jpg","titre":"The Shawshank Redemption"}' -UseBasicParsing
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters" -Method POST -Headers @{ Authorization = "Bearer <token>" } -ContentType "application/json" -Body '{"id":"tt0111161","url":"https://example.com/shawshank.jpg","titre":"The Shawshank Redemption"}' -UseBasicParsing
 
 # Modifier un poster (un seul champ suffit)
-Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method PUT -ContentType "application/json" -Body '{"titre": "The Shawshank Redemption (1994)"}' -UseBasicParsing
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method PUT -Headers @{ Authorization = "Bearer <token>" } -ContentType "application/json" -Body '{"titre": "The Shawshank Redemption (1994)"}' -UseBasicParsing
 
 # Supprimer un poster
-Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method DELETE -UseBasicParsing
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method DELETE -Headers @{ Authorization = "Bearer <token>" } -UseBasicParsing
 ```
 
 ## Configuration de la base de données

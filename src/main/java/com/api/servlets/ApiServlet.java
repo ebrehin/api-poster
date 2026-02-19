@@ -1,5 +1,6 @@
 package com.api.servlets;
 
+import com.api.dto.ErrorResponse;
 import com.api.entities.Poster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoClient;
@@ -207,6 +208,4 @@ public class ApiServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         mapper.writeValue(response.getWriter(), new ErrorResponse(status, message));
     }
-
-    public record ErrorResponse(int status, String message) {}
 }
