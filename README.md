@@ -1,6 +1,6 @@
 # api-poster
 
-API REST Java déployée sur **Tomcat 10.1** avec une base de données **MariaDB**, le tout conteneurisé via **Docker Compose**.
+API REST Java déployée sur **Tomcat 10.1** avec une base de données **MongoDB**, le tout conteneurisé via **Docker Compose**.
 
 ## Stack technique
 
@@ -16,33 +16,43 @@ API REST Java déployée sur **Tomcat 10.1** avec une base de données **MariaDB
 
 ```
 api-poster/
-├── Dockerfile                      # Build Maven + image Tomcat finale
-├── docker-compose.yaml             # Lance Tomcat + MariaDB
-├── pom.xml
-└── src/main/
-    ├── java/com/api/
-    │   ├── entities/
-    │   │   └── Poster.java         # POJO — id, url, titre
-    │   └── servlets/
-    │       └── ApiServlet.java     # Servlet unique — toutes les routes
-    ├── resources/
-    │   └── mongo/
-    │       └── init.js             # Création de la collection + données de test
-    └── webapp/
-        └── WEB-INF/
-            └── web.xml
+├── 📁 src
+│   └── 📁 main
+│       ├── 📁 java
+│       │   └── 📁 com
+│       │       └── 📁 api
+│       │           ├── 📁 entities
+│       │           │   └── ☕ Poster.java          # POJO — id, url, titre
+│       │           ├── 📁 repositories
+│       │           └── 📁 servlets
+│       │               └── ☕ ApiServlet.java      # Servlet unique — toutes les routes
+│       ├── 📁 resources
+│       │   ├── 📁 META-INF
+│       │   ├── 📁 mongo
+│       │   │   └── 📄 init.js                      # Création de la collection + données de test
+│       │
+│       └── 📁 webapp
+│           ├── 📁 META-INF
+│           │   └── 📄 MANIFEST.MF
+│           └── 📁 WEB-INF
+│               ├── 📁 lib
+│               └── ⚙️ web.xml
+├── ⚙️ .gitignore
+├── 📝 README.md
+├── 🐳 Dockerfile                                   # Build Maven + image Tomcat finale
+├── ⚙️ docker-compose.yaml                          # Lance Tomcat + MongoDB
+└── ⚙️ pom.xml
 ```
 
 ## Lancer l'application
 
 ### Prérequis
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installé et démarré
+- Docker Desktop installé et démarré
 
 ### Démarrage
 
 ```bash
-# Depuis le dossier api-poster/
 docker compose up --build
 ```
 
@@ -50,7 +60,7 @@ Cette commande :
 1. Compile le projet Java avec Maven (dans un container)
 2. Produit le fichier `api-posters.war`
 3. Lance un container **MongoDB** (`poster-mongodb`) et y exécute `init.js`
-4. Attend que MariaDB soit prêt (healthcheck)
+4. Attend que MongoDB soit prêt (healthcheck)
 5. Lance un container **Tomcat** (`poster-tomcat`) et y déploie le WAR
 
 L'API est accessible sur : **http://localhost:8080**
@@ -61,7 +71,7 @@ L'API est accessible sur : **http://localhost:8080**
 docker compose down
 ```
 
-Pour supprimer aussi le volume de données MariaDB (nécessaire après une modification de `init.sql`) :
+Pour supprimer aussi le volume de données MongoDB (nécessaire après une modification de `init.sql`) :
 
 ```bash
 docker compose down -v
@@ -100,6 +110,25 @@ curl -X PUT http://localhost:8080/api/posters/tt0111161 \
 curl -X DELETE http://localhost:8080/api/posters/tt0111161
 ```
 
+### Exemples de requêtes (Powershell)
+
+```ps
+# Lister les posters
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/" -Method GET -UseBasicParsing
+
+# Récupérer un poster
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method GET -UseBasicParsing
+
+# Créer un poster
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters" -Method POST -ContentType "application/json" -Body '{"id":"tt0111161","url":"https://example.com/shawshank.jpg","titre":"The Shawshank Redemption"}' -UseBasicParsing
+
+# Modifier un poster (un seul champ suffit)
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method PUT -ContentType "application/json" -Body '{"titre": "The Shawshank Redemption (1994)"}' -UseBasicParsing
+
+# Supprimer un poster
+Invoke-WebRequest -Uri "http://localhost:8080/api/posters/tt0111161" -Method DELETE -UseBasicParsing
+```
+
 ## Configuration de la base de données
 
 Les paramètres de connexion sont définis via les variables d'environnement dans `docker-compose.yaml` et lus au démarrage par le servlet :
@@ -111,4 +140,4 @@ Les paramètres de connexion sont définis via les variables d'environnement dan
 | `MONGO_DB` | `posters_db` |
 ## Développement sans Docker
 
-Il est possible de tester localement en pointant `persistence.xml` vers une instance MariaDB locale, puis en déployant le WAR sur un Tomcat 10.1 installé sur la machine. Dans ce cas, le dossier `Servers/` retrouve son utilité si tu utilises Eclipse.
+Il est possible de tester localement en pointant `persistence.xml` vers une instance MongoDB locale, puis en déployant le WAR sur un Tomcat 10.1 installé sur la machine.
