@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>api-posters</display-name>
+
+    <!--
+        Le servlet est déclaré via l'annotation @WebServlet("/api/*") dans ApiServlet.java.
+        Aucune déclaration XML supplémentaire n'est nécessaire.
+        Ce fichier sert uniquement à configurer le comportement global de l'application.
+    -->
+
+    <!-- Encodage UTF-8 pour toutes les requêtes -->
+    <request-character-encoding>UTF-8</request-character-encoding>
+    <response-character-encoding>UTF-8</response-character-encoding>
+
+</web-app>

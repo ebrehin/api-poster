@@ -1,0 +1,21 @@
+# Build Maven
+target/
+build/
+
+# Données Docker (volume local si monté en bind mount)
+data/
+
+# IDE Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
