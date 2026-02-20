@@ -64,6 +64,7 @@ Cette commande :
 5. Lance un container **Tomcat** (`poster-tomcat`) et y déploie le WAR
 
 L'API est accessible sur : **http://localhost:8080**
+La documentation Swagger UI est accessible sur : **http://localhost:8080/swagger-ui/**
 
 ### Arrêt
 
