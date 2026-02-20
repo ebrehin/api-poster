@@ -34,9 +34,13 @@ api-poster/
 │       └── 📁 webapp
 │           ├── 📁 META-INF
 │           │   └── 📄 MANIFEST.MF
-│           └── 📁 WEB-INF
-│               ├── 📁 lib
-│               └── ⚙️ web.xml
+│           ├── 📁 WEB-INF
+│           │    ├── 📁 lib
+│           │    └── ⚙️ web.xml
+│           └── 📁 swagger-ui                       # Configurations swagger
+│               ├── 🌐 index.html
+│               ├── ⚙️ openapi.yaml
+│               └── 📄 swagger-initializer.js
 ├── ⚙️ .gitignore
 ├── 📝 README.md
 ├── 🐳 Dockerfile                                   # Build Maven + image Tomcat finale
