@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile
     container_name: poster-tomcat
     ports:
-      - "8080:8080"
+      - "8084:8080"
     depends_on:
       mongodb:
         condition: service_healthy
