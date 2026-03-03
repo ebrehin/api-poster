@@ -32,10 +32,13 @@ public class CorsFilter implements Filter {
         HttpServletRequest  request  = (HttpServletRequest)  req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        // À remplacer par l'URL de la gateway le moment venu
-        response.setHeader("Access-Control-Allow-Origin",  "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        String origin = request.getHeader("Origin");
+        if (origin != null) {
+            // Seule la gateway est autorisée à appeler cette API directement
+            response.setHeader("Access-Control-Allow-Origin",  "http://localhost:8081");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        }
 
         // Requête preflight OPTIONS : on répond directement sans passer au servlet
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
