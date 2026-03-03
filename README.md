@@ -34,9 +34,13 @@ api-poster/
 │       └── 📁 webapp
 │           ├── 📁 META-INF
 │           │   └── 📄 MANIFEST.MF
-│           └── 📁 WEB-INF
-│               ├── 📁 lib
-│               └── ⚙️ web.xml
+│           ├── 📁 WEB-INF
+│           │    ├── 📁 lib
+│           │    └── ⚙️ web.xml
+│           └── 📁 swagger-ui                       # Configurations swagger
+│               ├── 🌐 index.html
+│               ├── ⚙️ openapi.yaml
+│               └── 📄 swagger-initializer.js
 ├── ⚙️ .gitignore
 ├── 📝 README.md
 ├── 🐳 Dockerfile                                   # Build Maven + image Tomcat finale
@@ -64,6 +68,7 @@ Cette commande :
 5. Lance un container **Tomcat** (`poster-tomcat`) et y déploie le WAR
 
 L'API est accessible sur : **http://localhost:8080**
+La documentation Swagger UI est accessible sur : **http://localhost:8080/swagger-ui/**
 
 ### Arrêt
 
