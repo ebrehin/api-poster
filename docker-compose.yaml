@@ -1,42 +1,30 @@
 services:
-
-  # ---------------------------------------------------------------------------
-  # Base de données MongoDB
-  # ---------------------------------------------------------------------------
-  mongodb:
-    image: mongo:7
+  posters_db:
+    image: mongo:4.4
     container_name: mongodb-poster
     environment:
       MONGO_INITDB_DATABASE: posters_db
     volumes:
-      - mongodb-data:/data/db
-      # Script exécuté automatiquement lors de la première initialisation du volume
+      - ./data_db:/data/db
       - ./src/main/resources/mongo/init.js:/docker-entrypoint-initdb.d/init.js
     ports:
-      - "27017:27017"
+      - "10079:27017"
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # ---------------------------------------------------------------------------
-  # Serveur Tomcat — déployé depuis le WAR construit avec Maven
-  # ---------------------------------------------------------------------------
-  tomcat:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: poster-tomcat
+  api-poster:
+    image: gitlab-depinfo.univ-brest.fr:5050/e22200893/apis/api-poster:v1.0.0
     ports:
-      - "8084:8080"
+      - "10064:8080"
     depends_on:
-      mongodb:
+      posters_db:
         condition: service_healthy
     environment:
-      MONGO_HOST: mongodb
+      MONGO_HOST: posters_db
       MONGO_PORT: 27017
-      MONGO_DB:   posters_db
+      MONGO_DB: posters_db
 
-volumes:
-  mongodb-data:
+volumes: {}
